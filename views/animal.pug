@@ -1,0 +1,24 @@
+extends layout
+block content
+  h1= title
+  p Welcome to the #{title} page.
+  br
+  br
+  -
+    let results = [
+      { animalName: "Dog", animalCost: 45, description: "Dog will peel outside" },
+      { animalName: "Cat",animalCost: 35, description: "Cats will be always cat" },
+      { animalName: "Fish", animalCost: 75, description: "Fish is a protien" }
+    ]
+  div.container-fluid
+    div.row
+      each item, index in results
+        div.col-sm-2(onclick=`buy(${index})`)
+          h4 animalName: #{item.animalName}
+          p animalCost: $#{item.animalCost}
+          p Description: #{item.description}
+ 
+  script.
+    function buy(index) {
+      alert(`You purchased item ${index+1}.`);
+    }
