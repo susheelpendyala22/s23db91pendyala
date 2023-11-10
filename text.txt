@@ -1,5 +1,0 @@
-var animalRouter = require('./routes/animal');
-var boardRouter = require('./routes/board');
-
-app.use('/animal', animalRouter);
-app.use('/board', boardRouter);

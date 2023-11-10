@@ -12,7 +12,7 @@ const mongoose = require("mongoose");
 
 var resourceRouter = require('./routes/resource');
 
-var costumeRouter = require('./routes/costumes');
+var animalRouter = require('./routes/animal');
 
 require('dotenv').config();
 
@@ -49,47 +49,47 @@ var boardRouter = require('./routes/board');
 
 var chooseRouter = require("./routes/choose");
 
-var Costume = require("./models/costume");
+var animal = require("./models/animal");
 
 async function recreateDB(){
 
  // Delete everything
 
- await Costume.deleteMany();
+ await animal.deleteMany();
 
- let instance1 = new Costume(
+ let instance1 = new animal(
 
   {
 
-   costume_type: "Ghost Busters",
+   animalName: "Dog",
 
-   size:'Large',
+   Description:'Dog will peel outside',
 
-   cost:15.4
+   animalCost: 45
 
   });
 
-  let instance2 = new Costume(
+  let instance2 = new animal(
 
    {
 
-    costume_type: "Witch",
+    animalName: "Cat",
 
-    size: 'Medium',
+    Description: 'Cats weill be always cat',
 
-    cost: 17.4
+    animalCost: 35
 
    });
 
-   let instance3 = new Costume(
+   let instance3 = new animal(
 
     {
 
-     costume_type: "Vampire",
+     animalName: "Fish",
 
-     size: 'Extra Large',
+     Description: 'Fish is a protien',
 
-     cost: 20.5
+     animalCost: 75
 
     });
 
@@ -145,7 +145,7 @@ app.use("/choose", chooseRouter);
 
 app.use("/resource", resourceRouter);
 
-app.use('/costumes', costumeRouter);
+app.use('/animal', animalRouter);
 
 // catch 404 and forward to error handler
 
