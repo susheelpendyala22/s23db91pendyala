@@ -93,4 +93,17 @@ ${JSON.stringify(req.body)}`)
 failed`);
     }
 };
+// Handle a show one view with id specified by query
+exports.animal_view_one_Page = async function (req, res) {
+    console.log("single view for id " + req.query.id)
+    try {
+        result = await animal.findById(req.query.id)
+        res.render('animaldetail',
+            { title: 'animal Detail', toShow: result });
+    }
+    catch (err) {
+        res.status(500)
+        res.send(`{'error': '${err}'}`);
 
+    }
+};
