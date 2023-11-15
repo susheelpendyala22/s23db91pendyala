@@ -1,0 +1,37 @@
+extends layout
+block content
+    h1= title
+    form(id='animalForm' action="/resource/animal" method="POST")
+        div.form-group
+            label.animalAttr(for='animalName') animal Name
+            input#animalName(type='text' name='animalName')
+        div.form-group
+            label.animalAttr(for='Description') Description
+            input#Description(type='text' name='Description')
+        div.form-group
+            label.animalAttr(for='animalCost') animal cost
+            input#animalCost(type='number' step='any' name='animalCost')
+        input(type="submit")
+    script.
+        document.forms['animalForm'].addEventListener('submit', (event) => {
+            event.preventDefault();
+            // TODO do something here to show user that form is being submitted
+            fetch(event.target.action, {
+                method: 'POST',
+                body: new URLSearchParams(new FormData(event.target))
+            }).then((resp) => {
+                if(resp.ok){
+                    alert ("animal Created Successfully")
+                    document.getElementById('animalForm').reset()
+                }
+                else {
+                    alert (" File to Create animal")
+                }
+            }).then((body) => {
+                console.log (body)
+                    // TODO handle body
+            }).catch((error) => {
+                // TODO handle error
+                alert("Save failed " + error )
+            });
+        });
