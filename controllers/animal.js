@@ -149,6 +149,20 @@ exports.animal_delete_Page = async function (req, res) {
         res.send(`{'error': '${err}'}`);
     }
 };
+exports.animal_detail = async function (req, res) {
+    console.log("detail" + req.params.id);
+    try {
+     const result = await animal.findById(req.params.id);
+     if (!result) {
+      // If result is null, handle it as not found
+      res.status(404).send(`{"error": "Document for id ${req.params.id} not found"}`);
+      return;
+     }
+     res.send(result);
+    } catch (error) {
+     res.status(500).send(`{"error": "${error}"}`);
+    }
+   }
 
 
 

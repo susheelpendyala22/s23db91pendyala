@@ -1,45 +1,56 @@
 extends layout
+
 block content
-    h1= title
+  h1= title
+
+  if (toShow == null)
+    h2 No instance to update
+  else
     - let animalid = toShow._id
     - let animalName = toShow.animalName
     - let animalCost = toShow.animalCost
     - let Description = toShow.Description
+
     div.row(class='mb-2')
-        div.mr-1 ID is
-        div #{animalid}
+      div.mr-1 ID is
+      div #{animalid}
+
     - let actionid = "/resource/animal/" + animalid
+
     form(id='animalForm', action= actionid, method="PUT")
-        div.form-group
-            label.animalAttr(for='animalName') animal Name
-            input#animalName(type='text' name='animalName', value= animalName )
-        div.form-group
-            label.animalAttr(for='Description')  Description
-            input#Description(type='text' name='Description', value= Description  )
-        div.form-group
-            label.animalAttr(for='animalCost') animal cost
-            input#animalCost(type='number' name='animalCost' step='any', value= animalCost )
-        input(type="submit")
+      div.form-group
+        label.animalAttr(for='animalName') animal Name
+        input#animalName(type='text' name='animalName', value= animalName )
+
+      div.form-group
+        label.animalAttr(for='Description') Description
+        input#Description(type='text' name='Description', value= Description )
+
+      div.form-group
+        label.animalAttr(for='animalCost') animal cost
+        input#animalCost(type='number' name='animalCost' step='any', value= animalCost )
+
+      input(type="submit")
+
     script.
-        document.forms['animalForm'].addEventListener('submit', (event) => {
-            event.preventDefault();
-            // TODO do something here to show user that form is being submitted
-            fetch(event.target.action, {
-                method: 'PUT',
-                body: new URLSearchParams(new FormData(event.target)) // event.target is the form
-            }).then((resp) => {
-                if(resp.ok){
-                    alert ("animal Updated Successfully")
-                    document.getElementById('animalForm').reset()
-                }
-                else {
-                    alert (" File to Update animal")
-                }
-            }).then((body) => {
-                console.log(body)
-                // TODO handle body
-            }).catch((error) => {
-                // TODO handle error
-                alert("Update failed " + error )
-            });
+      document.forms['animalForm'].addEventListener('submit', (event) => {
+        event.preventDefault();
+        // TODO do something here to show user that the form is being submitted
+        fetch(event.target.action, {
+          method: 'PUT',
+          body: new URLSearchParams(new FormData(event.target)) // event.target is the form
+        }).then((resp) => {
+          if(resp.ok){
+            alert("Animal Updated Successfully");
+            document.getElementById('animalForm').reset();
+          } else {
+            alert("Failed to Update Animal");
+          }
+        }).then((body) => {
+          console.log(body);
+          // TODO handle body
+        }).catch((error) => {
+          // TODO handle error
+          alert("Update failed " + error);
         });
+      });

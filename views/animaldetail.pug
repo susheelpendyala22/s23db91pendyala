@@ -1,20 +1,27 @@
 extends layout
+
 block content
-  h1= title
-  - let animalid = toShow._id
-  - let animalName = toShow.animalName
-  - let animalCost = toShow.animalCost
-  - let animalDescription  = toShow.Description
-    div
-      div.row
-        div(class='animalAttr mr-3') animal ID:
-        div #{animalid}
-      div.row
-        div(class='animalAttr mr-3') animal Name:
-        div #{animalName}
-      div.row
-        div(class='animalAttr mr-3') animal Cost:
-        div #{animalCost}
-      div.row
-        div(class='animalAttr mr-3') Description:
-        div #{animalDescription}
+  h1.text-center= title
+
+  if (toShow == null)
+    h2 No instance to Show details
+  else
+    // Use a card layout for better styling and centering
+    .card.mx-auto.mt-5
+      .card-body.text-center
+        div.row
+          div(class='animalAttr') animal ID:
+          div #{toShow._id}
+        div.row
+          div(class='animalAttr') animal Name:
+          div #{toShow.animalName}
+        div.row
+          div(class='animalAttr') Description:
+          div #{toShow.Description}
+        div.row
+          div(class='animalAttr') animal Cost:
+          div #{toShow.animalCost}
+
+    .row.mt-3
+      .col.text-center
+        a.btn.btn-primary(href='/animal') Back to animal List
