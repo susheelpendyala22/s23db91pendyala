@@ -10,9 +10,14 @@ var logger = require("morgan");
 
 const mongoose = require("mongoose");
 
+var passport = require('passport');
+var LocalStrategy = require('passport-local').Strategy;
+
 var resourceRouter = require('./routes/resource');
 
 var animalRouter = require('./routes/animal');
+
+
 
 require('dotenv').config();
 
@@ -24,11 +29,11 @@ mongoose.connect(connectionString, {
 
   useUnifiedTopology: true,
 
- })
+})
 
- .then(() => console.log("Connected to MongoDB"))
+  .then(() => console.log("Connected to MongoDB"))
 
- .catch((err) => console.log("Error Connecting to MongoDB: ", err));
+  .catch((err) => console.log("Error Connecting to MongoDB: ", err));
 
 //Get the default connection
 
@@ -38,7 +43,31 @@ var db = mongoose.connection;
 
 db.on('error', console.error.bind(console, 'MongoDB connection error:'));
 
-db.once("open", function(){console.log("Connection to DB succeeded")})
+db.once("open", function () { console.log("Connection to DB succeeded") });
+
+passport.use(new LocalStrategy(
+  function (username, password, done) {
+    Account.findOne({ username: username })
+      .then(function (user) {
+        if (err) { return done(err); }
+        if (!user) {
+          return done(null, false, { message: 'Incorrect username.' });
+        }
+        if (!user.validPassword(password)) {
+          return done(null, false, { message: 'Incorrect password.' });
+        }
+        return done(null, user);
+      })
+      .catch(function (err) {
+        return done(err)
+      })
+  })
+)
+
+
+
+
+
 
 var indexRouter = require("./routes/index");
 
@@ -51,71 +80,71 @@ var chooseRouter = require("./routes/choose");
 
 var animal = require("./models/animal");
 
-async function recreateDB(){
+async function recreateDB() {
 
- // Delete everything
+  // Delete everything
 
- await animal.deleteMany();
+  await animal.deleteMany();
 
- let instance1 = new animal(
-
-  {
-
-   animalName: "Dog",
-
-   Description:'Dog will peel outside',
-
-   animalCost: 45
-
-  });
-
-  let instance2 = new animal(
-
-   {
-
-    animalName: "Cat",
-
-    Description: 'Cats weill be always cat',
-
-    animalCost: 35
-
-   });
-
-   let instance3 = new animal(
+  let instance1 = new animal(
 
     {
 
-     animalName: "Fish",
+      animalName: "Dog",
 
-     Description: 'Fish is a protien',
+      Description: 'Dog will peel outside',
 
-     animalCost: 75
+      animalCost: 45
 
     });
 
- instance1.save()
+  let instance2 = new animal(
 
- .then(doc => {console.log("First object saved")})
+    {
 
-  .catch(err=>{console.error(err)})
+      animalName: "Cat",
 
- instance2.save()
+      Description: 'Cats weill be always cat',
 
- .then(doc => {console.log("Second object saved")})
+      animalCost: 35
 
-  .catch(err=>{console.error(err)})
+    });
 
- instance3.save()
+  let instance3 = new animal(
 
- .then(doc => {console.log("Third object saved")})
+    {
 
-  .catch(err=>{console.error(err)})
+      animalName: "Fish",
 
- }
+      Description: 'Fish is a protien',
+
+      animalCost: 75
+
+    });
+
+  instance1.save()
+
+    .then(doc => { console.log("First object saved") })
+
+    .catch(err => { console.error(err) })
+
+  instance2.save()
+
+    .then(doc => { console.log("Second object saved") })
+
+    .catch(err => { console.error(err) })
+
+  instance3.save()
+
+    .then(doc => { console.log("Third object saved") })
+
+    .catch(err => { console.error(err) })
+
+}
 
 let reseed = true;
 
-if (reseed) {recreateDB();}
+if (reseed) { recreateDB(); }
 
 var app = express();
 
@@ -151,7 +180,7 @@ app.use('/animal', animalRouter);
 
 app.use(function (req, res, next) {
 
- next(createError(404));
+  next(createError(404));
 
 });
 
@@ -159,18 +188,27 @@ app.use(function (req, res, next) {
 
 app.use(function (err, req, res, next) {
 
- // set locals, only providing error in development
+  // set locals, only providing error in development
 
- res.locals.message = err.message;
+  res.locals.message = err.message;
 
- res.locals.error = req.app.get("env") === "development" ? err : {};
+  res.locals.error = req.app.get("env") === "development" ? err : {};
 
- // render the error page
+  // render the error page
 
- res.status(err.status || 500);
+  res.status(err.status || 500);
 
- res.render("error");
+  res.render("error");
 
 });
+
+app.use(require('express-session')({
+  secret: 'keyboard cat',
+  resave: false,
+  saveUninitialized: false
+}));
+app.use(passport.initialize());
+app.use(passport.session());
+
 
 module.exports = app;
