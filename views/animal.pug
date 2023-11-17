@@ -1,6 +1,17 @@
-each item in theanimal
-  div
-    p animalName - #{item.animalName}
-    p Description - #{item.Description}
-    p animalCost - #{item.animalCost}
-    br
+extends layout
+block content
+ h1= title
+ - let items = results;
+   each item in items
+    - let destination = `dispatch("/animal/update?id=${item._id}")`
+      div
+       p animalName  - #{item.animalName}
+       p animalCost  - #{item.animalCost}
+       p Description - #{item.Description}
+       button.btn( class="btn-primary ml-1", onclick= destination) Update
+       br
+       br
+ script.
+  function dispatch(path){
+   window.location.href=path
+  }
