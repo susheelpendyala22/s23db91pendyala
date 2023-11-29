@@ -1,20 +1,11 @@
 extends layout
-
 block content
-  h1= title
-  p Press Me to see the change
-  button(type="button" class="btn btn-secondary",id ="button",onclick="goFaster()") Press Me
-  br
-  #faster Increase The Speed
-  br
-  script.
-    var mph = 20;
-    var change = 1;
-    function goFaster(){
-      mph = mph + change;
-      change = change + 1;
-      document.getElementById('faster').textContent = `MPH ${mph} with change ${change}`
-    }
-  a(href="/animal") View Animals.
-
-  
+  if (!user)
+    a(href="/login") Login
+    br
+    a(href="/register") Register
+  if (user)
+    p You are currently logged in as #{user.username}
+    a(href="/animal") Take me to Animal
+    br
+    a(href="/logout") Logout
