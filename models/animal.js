@@ -1,8 +1,7 @@
 const mongoose = require("mongoose")
 const animalSchema = mongoose.Schema({
-    animalName: String,
-    Description: String,
-    animalCost: String
+    animalName:{type:String,required:true},
+    Description: {type:String,required:true},
+    animalCost: {type:Number,required:true,min:0,max:1000},
 })
-module.exports = mongoose.model("animal",
-    animalSchema)
+module.exports = mongoose.model("animal",animalSchema)

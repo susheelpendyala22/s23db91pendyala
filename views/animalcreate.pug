@@ -12,7 +12,11 @@ block content
             label.animalAttr(for='animalCost') animal cost
             input#animalCost(type='number' step='any' name='animalCost')
         input(type="submit")
-    script.
+        button(class="btn btn-secondary m-2" onclick="cancel()") Cancel
+      script.
+        function cancel() {
+           window.location.href='/animal'
+    }
         document.forms['animalForm'].addEventListener('submit', (event) => {
             event.preventDefault();
             // TODO do something here to show user that form is being submitted
@@ -25,7 +29,7 @@ block content
                     document.getElementById('animalForm').reset()
                 }
                 else {
-                    alert (" File to Create animal")
+                    alert (" Failed to Create animal")
                 }
             }).then((body) => {
                 console.log (body)

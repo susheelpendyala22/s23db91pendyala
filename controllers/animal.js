@@ -49,12 +49,30 @@ exports.animal_create_post = async function (req, res) {
     document.animalCost = req.body.animalCost;
     document.Description = req.body.Description;
     try {
-        let result = await document.save();
-        res.send(result);
-    }
-    catch (err) {
-        res.status(500);
-        res.send(`{"error": ${err}}`);
+        //     let result = await document.save();
+        //     res.send(result);
+        // }
+        // catch (err) {
+        //     res.status(500);
+        //     res.send(`{"error": ${err}}`);
+        await document.save();
+        res.redirect('/flowers');
+    } catch (error) {
+        if (error.name === 'ValidationError') {
+
+            const errors = Object.values(error.errors).map((err) => err.message);
+            return res.status(400).render('create', {
+                title: 'Create flower',
+                errors,
+
+            });
+        }
+
+        // Handle other types of errors
+
+        console.error(error);
+
+        res.status(500).send('Internal Server Error');
     }
 };
 
@@ -121,19 +139,19 @@ exports.animal_create_Page = function (req, res) {
 };
 // Handle building the view for updating a animal.
 // query provides the id
-exports.animal_update_Page = async function(req, res) {
-    console.log("update view for item "+req.query.id)
-    try{
-    let result = await animal.findById(req.query.id)
-    res.render('animalupdate', { title: 'animal Update', toShow: result });
+exports.animal_update_Page = async function (req, res) {
+    console.log("update view for item " + req.query.id)
+    try {
+        let result = await animal.findById(req.query.id)
+        res.render('animalupdate', { title: 'animal Update', toShow: result });
     }
-    catch(err){
-    res.status(500)
-    res.send(`{'error': '${err}'}`);
+    catch (err) {
+        res.status(500)
+        res.send(`{'error': '${err}'}`);
     }
-    };
-    
-    
+};
+
+
 // Handle a delete one view with id from query
 exports.animal_delete_Page = async function (req, res) {
     console.log("Delete view for id " + req.query.id)
@@ -152,17 +170,17 @@ exports.animal_delete_Page = async function (req, res) {
 exports.animal_detail = async function (req, res) {
     console.log("detail" + req.params.id);
     try {
-     const result = await animal.findById(req.params.id);
-     if (!result) {
-      // If result is null, handle it as not found
-      res.status(404).send(`{"error": "Document for id ${req.params.id} not found"}`);
-      return;
-     }
-     res.send(result);
+        const result = await animal.findById(req.params.id);
+        if (!result) {
+            // If result is null, handle it as not found
+            res.status(404).send(`{"error": "Document for id ${req.params.id} not found"}`);
+            return;
+        }
+        res.send(result);
     } catch (error) {
-     res.status(500).send(`{"error": "${error}"}`);
+        res.status(500).send(`{"error": "${error}"}`);
     }
-   }
+}
 
 
 
